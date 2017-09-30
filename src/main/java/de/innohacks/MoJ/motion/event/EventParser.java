@@ -1,9 +1,9 @@
 package de.innohacks.MoJ.motion.event;
 
-import com.sun.tools.javac.util.List;
 import de.innohacks.MoJ.utils.LogUtils;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +97,7 @@ public class EventParser {
             case TYPE_MOTION:
                 // Parse MotionEvent
                 String[] keys = {KEY_DX, KEY_DY, KEY_DOWN};
-                if (params.keySet().containsAll(List.from(keys))) {
+                if (params.keySet().containsAll(Arrays.asList(keys))) {
                     try {
                         final double dx = (Double)(params.get(KEY_DX));
                         final double dy = (Double)(params.get(KEY_DY));

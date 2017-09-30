@@ -20,7 +20,7 @@ public class MotionManager implements Runnable {
     private IMotionSource source;
     private List<MotionListener> observer;
 
-    private boolean running = false;
+    private volatile boolean running = false;
 
 
     /**
@@ -100,5 +100,9 @@ public class MotionManager implements Runnable {
      */
     public void stop() {
         this.running = false;
+    }
+
+    public void resetOrientation() {
+        source.resetOrientation();
     }
 }

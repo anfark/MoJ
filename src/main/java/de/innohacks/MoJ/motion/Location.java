@@ -9,7 +9,7 @@ public class Location {
     private double x = 0;
     private double y = 0;
 
-    private double threshold = 0.05;
+    private static final double threshold = 0.05;
 
     public void update(MotionEvent event) {
         update(event.getDx(), event.getDy());
@@ -33,8 +33,15 @@ public class Location {
         return y;
     }
 
+    public void reset() {
+        x = 0;
+        y = 0;
+    }
+
     @Override
     public String toString() {
-        return "[Location x="+ getX() + " y=" + getY() + "]";
+        return String.format("[Location x=%.2f, y=%.2f]",
+                Math.round(getX() * 100.0) / 100.0,
+                Math.round(getY() * 100.0) / 100.0);
     }
 }

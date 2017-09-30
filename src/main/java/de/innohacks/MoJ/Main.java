@@ -1,67 +1,52 @@
 package de.innohacks.MoJ;
 
-import de.innohacks.MoJ.midi.MidiWriter;
+import de.innohacks.MoJ.motion.Location;
 import de.innohacks.MoJ.motion.MotionManager;
+import de.innohacks.MoJ.motion.event.Gesture;
+import de.innohacks.MoJ.motion.event.GestureEvent;
 import de.innohacks.MoJ.motion.event.IEvent;
-import org.zeromq.ZMQ;
+import de.innohacks.MoJ.motion.event.MotionEvent;
 
-import javax.sound.midi.MidiUnavailableException;
-import java.util.logging.Logger;
+import java.util.Arrays;
 
 
 /**
  * Created by roman on 30.09.17.
  */
 public class Main {
-
     private static MotionManager manager;
-    private static MidiWriter midiWriter;
 
-    public static void main(String[] args) throws MidiUnavailableException {
+    public static void main(String[] args) {
 
+        Location loc = new Location();
 
         manager = new MotionManager(args[0]);
-        midiWriter = new MidiWriter();
-        manager.addListener((MotionManager man, IEvent event) -> {});
-        manager.addListener(midiWriter);
+        manager.addListener((MotionManager man, IEvent event) -> {
+            if (event instanceof MotionEvent) {
+                MotionEvent e = (MotionEvent)(event);
+                loc.update(e);
+                System.out.println("" + loc);
+            }
+            else {
 
-        /*
-        String address = args[0];
+                if (event instanceof GestureEvent) {
+                    GestureEvent e = (GestureEvent)(event);
 
-        ZMQ.Context context = ZMQ.context(1);
+                    if (e.getGesture() == Gesture.ROTATE_RL) {
+                        System.out.println("Reset");
+                        man.resetOrientation();
+                    }
+                }
+                System.out.println("Received " + event);
+            }
 
-        //  Socket to talk to server
-        System.out.println("Collecting updates from weather server");
-        ZMQ.Socket subscriber = context.socket(ZMQ.SUB);
-        subscriber.connect(address);
+            char[] pos = new char[81];
+            Arrays.fill(pos, '-');
 
-        //  Subscribe to zipcode, default is NYC, 10001
-        String filter = (args.length > 0) ? args[0] : "10001 ";
-        subscriber.subscribe("");
+            int index = (int) Math.abs(Math.max(Math.min(((-loc.getX() + 20.0) / 40.0) * 80, 80),0));
+            pos[index] = '|';
+            System.out.println('[' + new String(pos) + ']');
+        });
 
-        //  Process 100 updates
-
-        while (true) {
-            //  Use trim to remove the tailing '0' character
-            String string = subscriber.recvStr(0).trim();
-
-            System.out.println(string);
-
-        }
-
-
-
-        /*
-        ZContext ctx = new ZContext();
-        ZSocket socket = new ZSocket(ZMQ.SUB);
-
-        socket.connect(address);
-        socket.subscribe("");
-
-
-        while (true) {
-            String s = socket.receiveStringUtf8();
-            System.out.println(s);
-        }*/
     }
 }

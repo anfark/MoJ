@@ -5,6 +5,7 @@ import de.innohacks.MoJ.motion.event.IEvent;
 import de.innohacks.MoJ.utils.LogUtils;
 import org.zeromq.ZMQ;
 
+import java.nio.charset.Charset;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,8 @@ public class ZQMMotionSource implements IMotionSource {
     private static transient final Logger logger = LogUtils.createLogger(ZQMMotionSource.class, Level.FINE);//Logger.getLogger(ZQMMotionSource.class.getSimpleName());
 
     private final ZMQ.Socket socket;
+    private final ZMQ.Socket resetSocket;
+
     private final String address;
     private final EventParser parser = new EventParser();
 
@@ -27,6 +30,8 @@ public class ZQMMotionSource implements IMotionSource {
 
         ZMQ.Context context = ZMQ.context(1);
         socket = context.socket(ZMQ.SUB);
+
+        resetSocket = context.socket(ZMQ.PUB);
     }
 
     @Override
@@ -38,14 +43,17 @@ public class ZQMMotionSource implements IMotionSource {
         logger.fine("Open ZQM socket to " + address);
 
         open = true;
-        socket.connect(address);
+        //resetSocket.bind(   address + ":9998");
+        socket.connect(address + ":9999");
         socket.subscribe("");
+        resetSocket.connect(address + ":9998");
+
     }
 
     @Override
     public IEvent fetchUpdate() {
 
-        final String str = socket.recvStr();
+        final String str = new String(socket.recv(), Charset.defaultCharset());
         return parser.parse(str);
     }
 
@@ -58,11 +66,19 @@ public class ZQMMotionSource implements IMotionSource {
         logger.fine("Close ZQM socket");
         open = false;
         socket.unsubscribe("");
-        socket.disconnect(address);
+        socket.disconnect(address + ":9999");
+
+        resetSocket.disconnect(address + ":9998");
+        resetSocket.close();
     }
 
     @Override
     public boolean isOpen() {
         return open;
+    }
+
+    @Override
+    public void resetOrientation() {
+        resetSocket.send("42");
     }
 }

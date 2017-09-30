@@ -23,6 +23,12 @@ public interface IMotionSource {
      */
     void close();
 
+
+    /**
+     * Resetst the orientiation of this {@link IMotionSource}.
+     */
+    void resetOrientation();
+
     /**
      * Checks if the source is open.
      * @return
