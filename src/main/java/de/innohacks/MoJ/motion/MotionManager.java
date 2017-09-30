@@ -101,4 +101,8 @@ public class MotionManager implements Runnable {
     public void stop() {
         this.running = false;
     }
+
+    public void resetOrientation() {
+        source.resetOrientation();
+    }
 }

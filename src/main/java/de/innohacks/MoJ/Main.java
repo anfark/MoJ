@@ -2,9 +2,10 @@ package de.innohacks.MoJ;
 
 import de.innohacks.MoJ.motion.Location;
 import de.innohacks.MoJ.motion.MotionManager;
+import de.innohacks.MoJ.motion.event.Gesture;
+import de.innohacks.MoJ.motion.event.GestureEvent;
 import de.innohacks.MoJ.motion.event.IEvent;
 import de.innohacks.MoJ.motion.event.MotionEvent;
-import org.zeromq.ZMQ;
 
 import java.util.Arrays;
 
@@ -24,11 +25,19 @@ public class Main {
             if (event instanceof MotionEvent) {
                 MotionEvent e = (MotionEvent)(event);
                 loc.update(e);
-                //System.out.println("" + loc);
+                System.out.println("" + loc);
             }
             else {
-                //System.out.println("Received " + event);
-                loc.reset();
+
+                if (event instanceof GestureEvent) {
+                    GestureEvent e = (GestureEvent)(event);
+
+                    if (e.getGesture() == Gesture.ROTATE_RL) {
+                        System.out.println("Reset");
+                        man.resetOrientation();
+                    }
+                }
+                System.out.println("Received " + event);
             }
 
             char[] pos = new char[81];
