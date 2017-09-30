@@ -6,14 +6,14 @@ public class MidiWriter {
 
     private final Receiver receiver;
 
-    MidiWriter() throws MidiUnavailableException {
+    public MidiWriter() throws MidiUnavailableException {
         receiver = MidiSystem.getReceiver();
     }
 
     public void writeMidi(MidiNote note) {
         ShortMessage myMsg = new ShortMessage();
         try {
-            myMsg.setMessage(note.getType(), 0, note.getValue(), 93);
+            myMsg.setMessage(note.getType(), 0, note.getPitch(), note.getVolume());
         } catch (InvalidMidiDataException e) {
             e.printStackTrace();
         }
