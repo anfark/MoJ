@@ -41,11 +41,29 @@ public class Main {
                         loc.reset();
                     }
                 }
+
+                if (event == IEvent.MOUSE_TOGGLE) {
+                    System.out.println("Reset");
+                    loc.reset();
+                    man.resetOrientation();
+                }
+
                 System.out.println("Received " + event);
             }
 
-            char[] pos = new char[81];
-            Arrays.fill(pos, '-');
+            char[] posX = new char[41];
+            char[] posY = new char[41];
+
+            Arrays.fill(posX, '-');
+            Arrays.fill(posY, '-');
+
+            int indexX = (int) Math.abs(Math.max(Math.min(((-loc.getX() + 20.0) / 40.0) * 40, 40),0));
+            int indexY = (int) Math.abs(Math.max(Math.min(((-loc.getY() + 20.0) / 40.0) * 40, 40),0));
+            posX[indexX] = 'X';
+            posY[indexY] = 'Y';
+            System.out.print('[' + new String(posX) + "] ");
+            System.out.print('[' + new String(posY) + "] ");
+            System.out.println(loc);
 
             int index = (int) Math.abs(Math.max(Math.min(((-loc.getX() + 20.0) / 40.0) * 80, 80),0));
             pos[index] = '|';
