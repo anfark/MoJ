@@ -1,5 +1,6 @@
 package de.innohacks.MoJ;
 
+import de.innohacks.MoJ.midi.MidiWriter;
 import de.innohacks.MoJ.motion.Location;
 import de.innohacks.MoJ.motion.MotionManager;
 import de.innohacks.MoJ.motion.event.Gesture;
@@ -7,6 +8,7 @@ import de.innohacks.MoJ.motion.event.GestureEvent;
 import de.innohacks.MoJ.motion.event.IEvent;
 import de.innohacks.MoJ.motion.event.MotionEvent;
 
+import javax.sound.midi.MidiUnavailableException;
 import java.util.Arrays;
 
 
@@ -15,12 +17,14 @@ import java.util.Arrays;
  */
 public class Main {
     private static MotionManager manager;
+    private static MidiWriter midiWriter;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MidiUnavailableException {
 
         Location loc = new Location();
 
         manager = new MotionManager(args[0]);
+        midiWriter = new MidiWriter();
         manager.addListener((MotionManager man, IEvent event) -> {
             if (event instanceof MotionEvent) {
                 MotionEvent e = (MotionEvent)(event);
@@ -47,6 +51,6 @@ public class Main {
             pos[index] = '|';
             System.out.println('[' + new String(pos) + ']');
         });
-
+        manager.addListener(midiWriter);
     }
 }
