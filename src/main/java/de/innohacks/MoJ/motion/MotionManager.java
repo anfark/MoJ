@@ -20,7 +20,7 @@ public class MotionManager implements Runnable {
     private IMotionSource source;
     private List<MotionListener> observer;
 
-    private boolean running = false;
+    private volatile boolean running = false;
 
 
     /**
