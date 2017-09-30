@@ -12,19 +12,24 @@ import java.util.List;
 
 public class Transformer {
 
-    List<Tuple<MidiNote, MidiNote>> noteOneFlyweights;
+    List<Tuple<MidiNote, MidiNote>> noteOnFlyweights;
+    double x;
+    double y;
 
     public Transformer() {
-        this.noteOneFlyweights = new ArrayList<>();
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(0), null));
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(1), null));
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(2), null));
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(3), null));
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(4), null));
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(5), null));
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(6), null));
-        noteOneFlyweights.add(new Tuple<>(new NoteOn(7), null));
+        this.noteOnFlyweights = new ArrayList<>();
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(0), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(1), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(2), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(3), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(4), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(5), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(6), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(7), null));
+        this.x = 0;
+        this.y = 0;
     }
+
     public Tuple<MidiNote, MidiNote>  transform(IEvent motionEvent) {
         if (motionEvent instanceof MotionEvent) {
             return parseToCCNote((MotionEvent) motionEvent);
@@ -33,25 +38,37 @@ public class Transformer {
             return parseToNotOn((GestureEvent) motionEvent);
         }
         else {
-            throw new UnsupportedOperationException();
+            return new Tuple<>(null, null);
         }
     }
 
     private Tuple<MidiNote, MidiNote> parseToNotOn(GestureEvent motionEvent) {
         switch (motionEvent.getGesture()) {
-            case SWIPE_L: return this.noteOneFlyweights.get(0);
-            case SWIPE_R: return this.noteOneFlyweights.get(1);
-            case CIRCLE_L: return this.noteOneFlyweights.get(2);
-            case CIRCLE_R: return this.noteOneFlyweights.get(3);
-            case ROTATE_LR: return this.noteOneFlyweights.get(4);
-            case ROTATE_RL: return this.noteOneFlyweights.get(5);
-            case EARTOUCH_L: return this.noteOneFlyweights.get(6);
-            case EARTOUCH_R: return this.noteOneFlyweights.get(7);
+            case SWIPE_L: return this.noteOnFlyweights.get(0);
+            case SWIPE_R: return this.noteOnFlyweights.get(1);
+            case CIRCLE_L: return this.noteOnFlyweights.get(2);
+            case CIRCLE_R: return this.noteOnFlyweights.get(3);
+            case ROTATE_LR: return this.noteOnFlyweights.get(4);
+            case ROTATE_RL: return this.noteOnFlyweights.get(5);
+            case EARTOUCH_L: return this.noteOnFlyweights.get(6);
+            case EARTOUCH_R: return this.noteOnFlyweights.get(7);
             default: return null;
         }
     }
 
     private Tuple<MidiNote, MidiNote> parseToCCNote(MotionEvent motionEvent) {
-        return new Tuple<>(new CCNote(0, (int)motionEvent.getDx()), new CCNote(1, (int)motionEvent.getDy()));
+        this.x += motionEvent.getDx();
+        this.y += motionEvent.getDy();
+
+        int xNormalized = normalize(this.x);
+        int yNormalized = normalize(this.y);
+
+        return new Tuple<>(new CCNote(0, xNormalized), new CCNote(1, yNormalized));
+    }
+
+    private int normalize(double y) {
+        int parsed = (int) (((y + 20) / 40) * 127);
+
+        return Math.max(Math.min(parsed, 127), 0);
     }
 }

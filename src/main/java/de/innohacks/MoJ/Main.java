@@ -22,7 +22,7 @@ public class Main {
 
         manager = new MotionManager(args[0]);
         midiWriter = new MidiWriter();
-        manager.addListener((MotionManager man, IEvent event) -> System.out.println("Received event " + event));
+        manager.addListener((MotionManager man, IEvent event) -> {});
         manager.addListener(midiWriter);
 
         /*
