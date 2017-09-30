@@ -2,18 +2,24 @@ package de.innohacks.MoJ.midi;
 
 public abstract class MidiNote {
     private int type;
-    private int value;
+    private int pitch;
+    private int volume;
 
-    public MidiNote(int type, int value) {
+    public MidiNote(int type, int pitch, int volume) {
         this.type = type;
-        this.value = value;
+        this.pitch = pitch;
+        this.volume = volume;
     }
 
     public int getType() {
         return type;
     }
 
-    public int getValue() {
-        return value;
+    public int getPitch() {
+        return pitch;
+    }
+
+    public int getVolume() {
+        return volume;
     }
 }
