@@ -4,6 +4,7 @@ import de.innohacks.MoJ.motion.event.IEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +41,11 @@ public class MotionManager implements Runnable {
         t.start();
 
         log.setLevel(Level.ALL);
+
+        ConsoleHandler handler = new ConsoleHandler();
+        // PUBLISH this level
+        handler.setLevel(Level.FINER);
+        log.addHandler(handler);
     }
 
 
@@ -48,7 +54,7 @@ public class MotionManager implements Runnable {
             throw new RuntimeException("Failed to start MotionManager: MotionManager is already running!");
         }
 
-        log.warning("MotionManager starts updates...");
+        log.fine("MotionManager starts updates...");
         running = true;
         source.open();
 
@@ -62,7 +68,7 @@ public class MotionManager implements Runnable {
         }
 
         source.close();
-        log.warning("MotionManager stops updates.");
+        log.fine("MotionManager stops updates.");
     }
 
     /**

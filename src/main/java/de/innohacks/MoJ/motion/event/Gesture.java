@@ -1,6 +1,9 @@
 package de.innohacks.MoJ.motion.event;
 
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 /**
  * Created by roman on 30.09.17.
  *
@@ -20,5 +23,15 @@ public enum Gesture {
 
     Gesture(String name) {
         this.name = name;
+    }
+
+    public static Optional<Gesture> getGesture(String name) {
+        for (Gesture g: values()) {
+            if (g.name.equals(name)) {
+                return Optional.of(g);
+            }
+        }
+
+        return Optional.empty();
     }
 }

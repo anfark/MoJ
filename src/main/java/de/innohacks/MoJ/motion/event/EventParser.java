@@ -43,8 +43,21 @@ public class EventParser {
             return null;
         }
 
+        //log.warning("Got JSON " + obj.keySet());
+        if (!(obj.keySet().contains(KEY_PARAMETERS) && obj.keySet().contains(KEY_TYPE))) {
+            log.warning("Failed to parse event: Invalid json " + str);
+            return null;
+        }
+
+
+
         // Search type and parameters
         final String type = (String)(obj.get(KEY_TYPE));
+
+        if (type.equals("MouseToggle")) {
+            return null;
+        }
+
         final JSONObject params = (JSONObject)(obj.get(KEY_PARAMETERS));
 
         if (type == null || params == null) {
@@ -63,21 +76,22 @@ public class EventParser {
                     return null;
                 }
 
-                // find gesture
-                final Gesture gesture = Gesture.valueOf(gestureName);
+                final Optional<Gesture> gesture = Gesture.getGesture(gestureName);
 
-                if (gesture == null) {
-                    log.warning("Failed to parse gesture event: Unknown gesture name " + gestureName);
+                if (gesture.isPresent()) {
+                    return new GestureEvent(gesture.get());
+                }
+                else {
+                    log.warning("Failed to parse gesture event: Unknown gesture " + gestureName);
                     return null;
                 }
 
-                return new GestureEvent(gesture);
 
             case TYPE_MOTION:
                 // Parse MotionEvent
                 final Optional<Double> dx = parseDouble(params, KEY_DX);
                 final Optional<Double> dy = parseDouble(params, KEY_DY);
-                final String downStr = params.getString(KEY_DOWN);
+                final String downStr = "false";//params.getString(KEY_DOWN);
 
                 if (dx.isPresent() && dy.isPresent() && downStr != null) {
                     return new MotionEvent(dx.get(), dy.get(), Boolean.parseBoolean(downStr));
@@ -98,7 +112,7 @@ public class EventParser {
 
     private Optional<Double> parseDouble(JSONObject params, String key) {
         try {
-            double d = Double.parseDouble(params.getString(key));
+            double d = (Double)(params.get(key));//Double.parseDouble(params.getString(key));
             return Optional.of(d);
         }
         catch (Exception e) {
