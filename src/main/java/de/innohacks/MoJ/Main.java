@@ -29,7 +29,6 @@ public class Main {
             if (event instanceof MotionEvent) {
                 MotionEvent e = (MotionEvent)(event);
                 loc.update(e);
-                System.out.println("" + loc);
             }
             else {
 
@@ -49,7 +48,7 @@ public class Main {
 
             int index = (int) Math.abs(Math.max(Math.min(((-loc.getX() + 20.0) / 40.0) * 80, 80),0));
             pos[index] = '|';
-            System.out.println('[' + new String(pos) + ']');
+            System.out.println('[' + new String(pos) + "] " + loc);
         });
         manager.addListener(midiWriter);
     }
