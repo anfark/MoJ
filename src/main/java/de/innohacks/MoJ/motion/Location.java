@@ -15,7 +15,7 @@ public class Location {
         update(event.getDx(), event.getDy());
     }
 
-    public void update(double dx, double dy) {
+    public synchronized void update(double dx, double dy) {
         if (Math.abs(dx) > threshold) {
             x += dx;
         }
@@ -25,21 +25,21 @@ public class Location {
         }
     }
 
-    public double getX() {
+    public synchronized double getX() {
         return x;
     }
 
-    public double getY() {
+    public synchronized double getY() {
         return y;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         x = 0;
         y = 0;
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return String.format("[Location x=%.2f, y=%.2f]",
                 Math.round(getX() * 100.0) / 100.0,
                 Math.round(getY() * 100.0) / 100.0);
