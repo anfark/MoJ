@@ -1,8 +1,11 @@
 package de.innohacks.MoJ.motion.event;
 
+import com.sun.tools.javac.util.List;
+import de.innohacks.MoJ.utils.LogUtils;
 import org.json.JSONObject;
 
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -11,7 +14,7 @@ import java.util.logging.Logger;
  * Parser to create {@link IEvent} instances from json strings.
  */
 public class EventParser {
-    private final static transient Logger log = Logger.getLogger(EventParser.class.getSimpleName());
+    private final static transient Logger log = LogUtils.createLogger(EventParser.class, Level.FINE);
 
     private final static String KEY_TYPE = "type";
     private final static String KEY_PARAMETERS = "parameters";
@@ -22,6 +25,7 @@ public class EventParser {
 
     private final static String TYPE_GESTURE = "Gesture";
     private final static String TYPE_MOTION = "MouseEvent";
+    private final static String TYPE_MOUSE_TOGGLE = "MouseToggle";
 
 
     /**
@@ -54,9 +58,12 @@ public class EventParser {
         // Search type and parameters
         final String type = (String)(obj.get(KEY_TYPE));
 
-        if (type.equals("MouseToggle")) {
-            return null;
+        // Catch MouseToggle events, because they don't have a params object.
+        if (type.equals(TYPE_MOUSE_TOGGLE)) {
+            return IEvent.MOUSE_TOGGLE;
         }
+
+
 
         final JSONObject params = (JSONObject)(obj.get(KEY_PARAMETERS));
 
@@ -89,20 +96,27 @@ public class EventParser {
 
             case TYPE_MOTION:
                 // Parse MotionEvent
-                final Optional<Double> dx = parseDouble(params, KEY_DX);
-                final Optional<Double> dy = parseDouble(params, KEY_DY);
-                final String downStr = "false";//params.getString(KEY_DOWN);
+                String[] keys = {KEY_DX, KEY_DY, KEY_DOWN};
+                if (params.keySet().containsAll(List.from(keys))) {
+                    try {
+                        final double dx = (Double)(params.get(KEY_DX));
+                        final double dy = (Double)(params.get(KEY_DY));
+                        final boolean down = (Boolean) (params.get(KEY_DOWN));
 
-                if (dx.isPresent() && dy.isPresent() && downStr != null) {
-                    return new MotionEvent(dx.get(), dy.get(), Boolean.parseBoolean(downStr));
+                        return new MotionEvent(dx, dy, down);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        log.fine("Failed to parse motion event: Some parameters don't have the correct type in " + params);
+                    }
                 }
                 else {
-                    log.warning("Failed to parse motion event: Missing some parameters in " + params.toString());
+                    log.warning("Failed to parse motion event: Missing some parameters in " + params);
                     return null;
                 }
 
             case "Heartbeat":
-                log.fine("Received heartbeat");
+                log.finest("Received heartbeat");
                 return null;
             default:
                 log.warning("Received unknown event type: " + type);

@@ -1,6 +1,7 @@
 package de.innohacks.MoJ.motion;
 
 import de.innohacks.MoJ.motion.event.IEvent;
+import de.innohacks.MoJ.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +9,13 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
 /**
  * Created by roman on 30.09.17.
  */
 public class MotionManager implements Runnable {
-    private static final transient Logger log = Logger.getLogger(MotionManager.class.getSimpleName());
+    private static final transient Logger log = LogUtils.createLogger(MotionManager.class, Level.FINE);
 
     private IMotionSource source;
     private List<MotionListener> observer;
@@ -39,13 +42,6 @@ public class MotionManager implements Runnable {
 
         Thread t = new Thread(this);
         t.start();
-
-        log.setLevel(Level.ALL);
-
-        ConsoleHandler handler = new ConsoleHandler();
-        // PUBLISH this level
-        handler.setLevel(Level.FINER);
-        log.addHandler(handler);
     }
 
 
@@ -62,7 +58,7 @@ public class MotionManager implements Runnable {
             final IEvent event = source.fetchUpdate();
 
             if (event != null) {
-                log.warning("Get event");
+                //log.warning("Get event");
                 observer.forEach( (listener) -> listener.handle(this, event));
             }
         }
