@@ -65,9 +65,6 @@ public class Main {
             System.out.print('[' + new String(posY) + "] ");
             System.out.println(loc);
 
-            int index = (int) Math.abs(Math.max(Math.min(((-loc.getX() + 20.0) / 40.0) * 80, 80),0));
-            pos[index] = '|';
-            System.out.println('[' + new String(pos) + "] " + loc);
         });
         manager.addListener(midiWriter);
     }
