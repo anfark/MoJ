@@ -17,7 +17,7 @@ public class ZQMMotionSource implements IMotionSource {
     private static transient final Logger logger = LogUtils.createLogger(ZQMMotionSource.class, Level.FINE);//Logger.getLogger(ZQMMotionSource.class.getSimpleName());
 
     private final ZMQ.Socket socket;
-    private final ZMQ.Socket resetSocket;
+    //private final ZMQ.Socket resetSocket;
 
     private final String address;
     private final EventParser parser = new EventParser();
@@ -31,7 +31,7 @@ public class ZQMMotionSource implements IMotionSource {
         ZMQ.Context context = ZMQ.context(1);
         socket = context.socket(ZMQ.SUB);
 
-        resetSocket = context.socket(ZMQ.PUB);
+        //resetSocket = context.socket(ZMQ.PUB);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ZQMMotionSource implements IMotionSource {
         //resetSocket.bind(   address + ":9998");
         socket.connect(address + ":9999");
         socket.subscribe("");
-        resetSocket.connect(address + ":9998");
+        //resetSocket.connect(address + ":9998");
 
     }
 
@@ -68,8 +68,8 @@ public class ZQMMotionSource implements IMotionSource {
         socket.unsubscribe("");
         socket.disconnect(address + ":9999");
 
-        resetSocket.disconnect(address + ":9998");
-        resetSocket.close();
+        //resetSocket.disconnect(address + ":9998");
+        //resetSocket.close();
     }
 
     @Override
@@ -79,6 +79,6 @@ public class ZQMMotionSource implements IMotionSource {
 
     @Override
     public void resetOrientation() {
-        resetSocket.send("42");
+        //resetSocket.send("");
     }
 }

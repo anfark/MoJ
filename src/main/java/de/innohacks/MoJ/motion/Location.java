@@ -11,7 +11,8 @@ public class Location {
 
     private static final double threshold = 0.05;
 
-    public void update(MotionEvent event) {
+    public synchronized void update(MotionEvent event) {
+
         update(event.getDx(), event.getDy());
     }
 
