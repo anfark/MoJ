@@ -38,6 +38,7 @@ public class Main {
                     if (e.getGesture() == Gesture.ROTATE_RL) {
                         System.out.println("Reset");
                         man.resetOrientation();
+                        loc.reset();
                     }
                 }
                 System.out.println("Received " + event);
