@@ -2,6 +2,7 @@ package de.innohacks.MoJ.motion;
 
 import de.innohacks.MoJ.motion.event.EventParser;
 import de.innohacks.MoJ.motion.event.IEvent;
+import de.innohacks.MoJ.utils.LogUtils;
 import org.zeromq.ZMQ;
 
 import java.util.logging.ConsoleHandler;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  * Created by roman on 30.09.17.
  */
 public class ZQMMotionSource implements IMotionSource {
-    private static transient final Logger logger = Logger.getLogger(ZQMMotionSource.class.getSimpleName());
+    private static transient final Logger logger = LogUtils.createLogger(ZQMMotionSource.class, Level.FINE);//Logger.getLogger(ZQMMotionSource.class.getSimpleName());
 
     private final ZMQ.Socket socket;
     private final String address;
@@ -26,18 +27,10 @@ public class ZQMMotionSource implements IMotionSource {
 
         ZMQ.Context context = ZMQ.context(1);
         socket = context.socket(ZMQ.SUB);
-
-        logger.setLevel(Level.ALL);
-        ConsoleHandler handler = new ConsoleHandler();
-        // PUBLISH this level
-        handler.setLevel(Level.FINER);
-        logger.addHandler(handler);
     }
 
     @Override
     public synchronized void open() {
-
-
         if (isOpen()) {
             return;
         }
@@ -51,12 +44,9 @@ public class ZQMMotionSource implements IMotionSource {
 
     @Override
     public IEvent fetchUpdate() {
-        //logger.fine("Has more? " + socket.hasReceiveMore());
-        //if (open && socket.hasReceiveMore()) {
-            final String str = socket.recvStr();
-            return parser.parse(str);
-        //}
-        //else return null;
+
+        final String str = socket.recvStr();
+        return parser.parse(str);
     }
 
     @Override
