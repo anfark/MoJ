@@ -14,5 +14,8 @@
     <orderEntry type="library" name="Maven: org.json:json:20170516" level="project" />
     <orderEntry type="library" name="Maven: org.zeromq:jeromq:0.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.zeromq:jnacl:0.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20170516" level="project" />
+    <orderEntry type="library" name="Maven: org.zeromq:jeromq:0.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.zeromq:jnacl:0.1.0" level="project" />
   </component>
 </module>
