@@ -7,6 +7,7 @@ import de.innohacks.MoJ.motion.event.Gesture;
 import de.innohacks.MoJ.motion.event.GestureEvent;
 import de.innohacks.MoJ.motion.event.IEvent;
 import de.innohacks.MoJ.motion.event.MotionEvent;
+import de.innohacks.MoJ.tetris.Tetris;
 
 import javax.sound.midi.MidiUnavailableException;
 import java.util.Arrays;
@@ -20,7 +21,8 @@ public class Main {
     private static MidiWriter midiWriter;
 
     public static void main(String[] args) throws MidiUnavailableException {
-
+        Tetris.startGame(args[0]);
+        /*
         Location loc = new Location();
 
         manager = new MotionManager(args[0]);
@@ -51,5 +53,6 @@ public class Main {
             System.out.println('[' + new String(pos) + "] " + loc);
         });
         manager.addListener(midiWriter);
+        */
     }
 }
