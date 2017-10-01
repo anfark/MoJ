@@ -6,6 +6,7 @@ import de.innohacks.MoJ.midi.NoteOn;
 import de.innohacks.MoJ.motion.event.GestureEvent;
 import de.innohacks.MoJ.motion.event.IEvent;
 import de.innohacks.MoJ.motion.event.MotionEvent;
+import de.innohacks.MoJ.motion.event.MouseToggle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,11 @@ public class Transformer {
         else if (motionEvent instanceof GestureEvent) {
             return parseToNotOn((GestureEvent) motionEvent);
         }
-        else {
+        else if (motionEvent instanceof MouseToggle){
+            this.x = 0;
+            this.y = 0;
+            return new Tuple<>(null, null);
+        } else {
             return new Tuple<>(null, null);
         }
     }

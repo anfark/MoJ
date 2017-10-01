@@ -60,7 +60,7 @@ public class EventParser {
 
         // Catch MouseToggle events, because they don't have a params object.
         if (type.equals(TYPE_MOUSE_TOGGLE)) {
-            return IEvent.MOUSE_TOGGLE;
+            return new MouseToggle();
         }
 
 
@@ -114,6 +114,8 @@ public class EventParser {
                     log.warning("Failed to parse motion event: Missing some parameters in " + params);
                     return null;
                 }
+            case TYPE_MOUSE_TOGGLE:
+                return new MouseToggle();
 
             case "Heartbeat":
                 log.finest("Received heartbeat");
