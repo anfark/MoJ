@@ -1,5 +1,5 @@
 # MoJ
-Project of Simon Heiss and Roman Schulte during the Inno{Hacks}2017. MoJ stands for Motion DJ and the goal of the project was it, to transform Motion Gestures into Midi Signals to be able to use them in any Midi compatible Software, like Traktor wich is a DJ Software. We also used the motion sensors to control a Tetris Game.
+MoJ stands for Motion DJ and the goal of the project was it, to transform Motion Gestures into Midi Signals to be able to use them in any Midi compatible Software, like Traktor wich is a DJ Software. We also used the motion sensors to control a Tetris Game. This is a project of Simon Heiss and Roman Schulte during the Inno{Hacks}2017. 
 
 # Used Components
 - Motion Sensor of Kinmenic (http://kinemic.com)
