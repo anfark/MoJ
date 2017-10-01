@@ -11,6 +11,11 @@ MoJ stands for Motion DJ and the goal of the project was it, to transform motion
 # General Usage
 The motion sensor braclet communicates with an Android app and sends recognized gestures to an ZMQ port, wich we subscribe with a Java programm. The .jar needs at least one adress string as an argument to know where the app socket ist located. The software can handle multiple devices, if you provide multiple adresses to the jar. The gestures recieved from the App are in a Json format, so we parse them and give them into an converter, that creates our domain objects, wich represent Midi signals. We implemented "Note On/Off" and "Continuous Change", to be able to use the most important features of Midi Compatible Softwares. Those Midi Objects are being send to a Midi Writer Class, that handles the Midi connection to the Traktor software. To be able to pass Midi signals from Java to Traktor, we needed to add a virtual Midi cable, wich can be done in the Midi/Audio settings under OSX. The virtual cable gets used by Traktor to receive the Midi events and then they can be configured to control elements in Traktor. "Note On/Off" signals are used to toggle or trigger buttons and "Continuous Change" events are used to control faders or potentiometers. Generally this software can be used with every midi compatible software and also will be able to communicate with other Midi hardware, if a Midi hardware interface is connected to the computer.
 
+# General Structure
+- The MontionManager listens on the ZMQ Port and throws events, when he listened to a Event from the Android App
+- The Midiwriter listens to the Events of the Motion Manager and transforms the Event with a Transformer into Midi signals
+- The Midiwriter then sends the Messages to the Midi Port, so the Application on the other end can act on those events
+
 # Known Issue
 The motion sensor used only provides delta move values. Therefore it is very difficult to provide a correct x/y position, as the delta is not a very good aproximation of the current location. Therefore we implemented a "reset" gesture, to set the 0,0 point back to the current location of the motion sensor in case the location gets out of hand. Using a different motion sensor with absolute x/y position would fix this issues.
 
