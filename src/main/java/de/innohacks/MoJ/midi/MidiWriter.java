@@ -13,9 +13,9 @@ public class MidiWriter implements MotionListener{
     private final Receiver receiver;
     private final Transformer transformer;
 
-    public MidiWriter() throws MidiUnavailableException {
+    public MidiWriter(int ccStartAdress) throws MidiUnavailableException {
         receiver = MidiSystem.getReceiver();
-        transformer = new Transformer();
+        transformer = new Transformer(ccStartAdress);
     }
 
     public void writeMidi(MidiNote note) {

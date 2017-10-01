@@ -16,17 +16,19 @@ public class Transformer {
     List<Tuple<MidiNote, MidiNote>> noteOnFlyweights;
     double x;
     double y;
+    private int ccStartAdress;
 
-    public Transformer() {
+    public Transformer(int ccStartAdress) {
         this.noteOnFlyweights = new ArrayList<>();
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(0), null));
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(1), null));
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(2), null));
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(3), null));
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(4), null));
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(5), null));
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(6), null));
-        noteOnFlyweights.add(new Tuple<>(new NoteOn(7), null));
+        this.ccStartAdress = ccStartAdress;
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 0), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 1), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 2), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 3), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 4), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 5), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 6), null));
+        noteOnFlyweights.add(new Tuple<>(new NoteOn(ccStartAdress * 7 + 7), null));
         this.x = 0;
         this.y = 0;
     }
@@ -68,7 +70,7 @@ public class Transformer {
         int xNormalized = normalize(this.x);
         int yNormalized = normalize(this.y);
 
-        return new Tuple<>(new CCNote(0, xNormalized), new CCNote(1, yNormalized));
+        return new Tuple<>(new CCNote(ccStartAdress * 2 + 0, xNormalized), new CCNote(ccStartAdress * 2 + 1, yNormalized));
     }
 
     private int normalize(double y) {
